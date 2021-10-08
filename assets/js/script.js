@@ -1,8 +1,6 @@
-var timerEl = document.getElementById('timer');
-console.log("timerEl");
-
 var buttonEl = document.querySelector(".startBtn");
 var quizEl = document.querySelector(".info-box");
+var timerEl = document.getElementById('timer');
 var objIndex = 0;
 
 
@@ -91,13 +89,9 @@ const quizQuestions = [
 ];
 
 buttonEl.addEventListener("click", makeQuiz);
-// {
- // makeQuiz();
- 
-//});
 
 function countdown() {
-  var timeLeft = 15;
+  var timeLeft = 150;
   var timeInterval = setInterval(function() {
     timerEl.textContent = "Time: " + timeLeft;
 
@@ -111,15 +105,16 @@ function countdown() {
 
 
 function makeQuiz() {
+  //declare local variables for questions, 4 choices, and correct answers
   var quest, pickA, pickB, pickC, pickD, ans;
    //= quizQuestions[aIndex].question;
 
   var insertEl = document.createElement("p");
-  //debugger;
-  console.log("insert element");
+  //creating an insertEl at the <p> tag
+
   insertEl.className = "quizList";
- // debugger;
-  console.log("makeing quiz list");
+  //giving its class name as quizList
+
   //insertEl.textContent = "";
   if(objIndex < quizQuestions.length) {
     quest = quizQuestions[objIndex].question;
@@ -135,14 +130,23 @@ function makeQuiz() {
     insertEl.innerHTML += "<label> <input type='radio' name='choices' value='a'> " + pickC + "</label> <br>";
     insertEl.innerHTML += "<label> <input type='radio' name='choices' value='a'> " + pickD + "</label> <br>";
     insertEl.innerHTML += "<button onclick='check()'> Submit Answer </button>";
-  countdown();
- // debugger;
-  console.log("insert string");
-  quizEl.appendChild(insertEl);
-  //debugger;
-  console.log("append?");
+    
+    quizEl.appendChild(insertEl);
+    objIndex++;
+    countdown();
 
+  }
 }
+
+function checkAnswer() {
+  var checkEl = document.getElementsByName('choices');
+  var checkItem;
+  for( var i = 0; i < checkEl.length; i++) {
+    if(checkEl[i].checked) {
+      checkItem = checkEl[i].answer;
+
+    }
+  }
 }
 
 /*
