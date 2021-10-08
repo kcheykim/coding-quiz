@@ -2,128 +2,104 @@ var timerEl = document.getElementById('timer');
 console.log("timerEl");
 
 var buttonEl = document.querySelector(".startBtn");
-var tasksToDoEl = document.querySelector(".info-box");
-
+var quizEl = document.querySelector(".info-box");
+var objIndex = 0;
 
 
 //creating an array of 10 objects with question and list of answers to choose from
 const quizQuestions = [
   {
     question: "What handles the structure of the webpage?",
-    answers: {
-      a: "CSS",
-      b: "javaScript",
-      c: "HTML",
-      d: "git"
-    },
-    correctAns: "c"
+    a: "CSS",
+    b: "javaScript",
+    c: "HTML",
+    d: "git",
+    answer: "c"
   },
   {
     question: "What handles the way webpages look?",
-    answers: {
-      a: "CSS",
-      b: "javaScript",
-      c: "HTML",
-      d: "git"
-    },
-    correctAns: "a"
+    a: "CSS",
+    b: "javaScript",
+    c: "HTML",
+    d: "git",
+    answer: "a"
   },
   {
     question: "What makes the webpages interactive?",
-    answers: {
-      a: "CSS",
-      b: "javaScript",
-      c: "HTML",
-      d: "git"
-    },
-    correctAns: "b"
+        a: "CSS",
+    b: "javaScript",
+    c: "HTML",
+    d: "git",
+    answer: "b"
   },
   {
     question: "What is the command before you commit a page?",
-    answers: {
-      a: "git push origin main",
-      b: "git add -A",
-      c: "git checkout -b main",
-      d: "git commit -m 'message'"
-    },
-    correctAns: "b"
+    a: "git push origin main",
+    b: "git add -A",
+    c: "git checkout -b main",
+    d: "git commit -m 'message'",
+    answer: "b"
   },
   {
     question: "What are the parts that lies inside the <body> tag in html?",
-    answers: {
-      a: "head, body, foot",
-      b: "header, body, footer",
-      c: "html, body, foot",
-      d: "header, content, footer"
-    },
-    correctAns: "d"
+    a: "head, body, foot",
+    b: "header, body, footer",
+    c: "html, body, foot",
+    d: "header, content, footer",
+    answer: "d"
   },
   {
     question: "In javaScript,  --> var classroom = []; is a declaration of a(n)?",
-    answers: {
-      a: "function",
-      b: "array",
-      c: "variable",
-      d: "class'"
-    },
-    correctAns: "b"
+    a: "function",
+    b: "array",
+    c: "variable",
+    d: "class'",
+    answer: "b"
   },
   {
     question: "What has the highest priority in CSS?",
-    answers: {
-      a: "an id",
-      b: "a class",
-      c: "a flexbox",
-      d: "a *"
-    },
-    correctAns: "a"
+    a: "an id",
+    b: "a class",
+    c: "a flexbox",
+    d: "a *",
+    answer: "a"
   },
   {
     question: "What is the purpose of media queries?",
-    answers: {
-      a: "responsive web design",
-      b: "can be view across many devices",
-      c: "part of advance CSS",
-      d: "all of the above"
-    },
-    correctAns: "d"
+    a: "responsive web design",
+    b: "can be view across many devices",
+    c: "part of advance CSS",
+    d: "all of the above",
+    answer: "d"
   },
   {
     question: "What is hoisting in term of a function?",
-    answers: {
-      a: "rasing the function using a pulley",
-      b: "local variables that can use by the function",
-      c: "moving the declartion to the top of the code",
-      d: "calling the function"
-    },
-    correctAns: "c"
+    a: "rasing the function using a pulley",
+    b: "local variables that can use by the function",
+    c: "moving the declartion to the top of the code",
+    d: "calling the function",
+    answer: "c"
   },
   {
-    question: "How can you be successful in this Boot?",
-    answers: {
-      a: "responsive web design",
-      b: "can be view across many devices",
-      c: "part of advance CSS",
-      d: "all of the above"
-    },
-    correctAns: "d"
+    question: "How can you be successful in this Bootcamp?",
+    a: "go over the modules",
+    b: "complete your challenges",
+    c: "seeking tutor and TA helps",
+    d: "all of the above",
+    answer: "d"
   }
 ];
 
-buttonEl.addEventListener("click", function() {
-  makeQuiz();
-  //countdown();
+buttonEl.addEventListener("click", makeQuiz);
+// {
+ // makeQuiz();
  
-});
+//});
 
 function countdown() {
   var timeLeft = 15;
   var timeInterval = setInterval(function() {
-    timerEl.textContent = "Time: " + timeLeft + "  seconds";
-    if(timeLeft === 1){
-      timerEl.textContent = "Time: " + timeLeft + "  second";
-    }
-    console.log("got inside countdown")
+    timerEl.textContent = "Time: " + timeLeft;
 
     timeLeft--;
     if(timeLeft < 0) {
@@ -135,20 +111,38 @@ function countdown() {
 
 
 function makeQuiz() {
+  var quest, pickA, pickB, pickC, pickD, ans;
+   //= quizQuestions[aIndex].question;
 
-  var listItemEl = document.createElement("li");
+  var insertEl = document.createElement("p");
   //debugger;
-  console.log("make li");
-  listItemEl.className = "quiz-items";
+  console.log("insert element");
+  insertEl.className = "quizList";
  // debugger;
-  console.log("make classname");
-  listItemEl.textContent = "In MAKE QUIZ";
+  console.log("makeing quiz list");
+  //insertEl.textContent = "";
+  if(objIndex < quizQuestions.length) {
+    quest = quizQuestions[objIndex].question;
+    pickA = quizQuestions[objIndex].a;
+    pickB = quizQuestions[objIndex].b;
+    pickC = quizQuestions[objIndex].c;
+    pickD = quizQuestions[objIndex].d;
+    ans = quizQuestions[objIndex].answer;
+
+    insertEl.innerHTML = "<h3>" + quest + "</h3>";
+    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='a'> " + pickA + "</label> <br>";
+    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='a'> " + pickB + "</label> <br>";
+    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='a'> " + pickC + "</label> <br>";
+    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='a'> " + pickD + "</label> <br>";
+    insertEl.innerHTML += "<button onclick='check()'> Submit Answer </button>";
+  countdown();
  // debugger;
   console.log("insert string");
-  tasksToDoEl.appendChild(listItemEl);
+  quizEl.appendChild(insertEl);
   //debugger;
   console.log("append?");
 
+}
 }
 
 /*
@@ -212,4 +206,4 @@ if(counter >= quizQuestions.length) {
   //telling the startQuizBtn to listen for a click and call the makeQuiz function
  // makeQuiz(quizQuestions);
  // quiz.addEventListener("click", makeQuiz);
- countdown();
+ //countdown();
