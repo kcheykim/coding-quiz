@@ -2,6 +2,8 @@ var buttonEl = document.querySelector(".startBtn");
 var quizEl = document.querySelector(".info-box");
 var timerEl = document.getElementById('timer');
 var objIndex = 0;
+var highscore = 0;
+var userScore = 0;
 var timeLeft = 150;
 
 
@@ -95,7 +97,9 @@ buttonEl.addEventListener("click", outputQuiz);
 function outputQuiz() {
   if(buttonEl){
     makeQuiz();
-  }
+    countdown();
+  } 
+  buttonEl.style.display = "none";
 }
 
 function countdown() {
@@ -105,7 +109,6 @@ function countdown() {
     timeLeft--;
     if(timeLeft < 0) {
       clearInterval(timeInterval);
-      timerEl.style.display = "none";
     }
   }, 1000);
 }
@@ -123,6 +126,7 @@ function makeQuiz() {
 
   //insertEl.textContent = "";
   if(objIndex < quizQuestions.length) {
+    quizEl.innerHTML = "";
     quest = quizQuestions[objIndex].question;
     pickA = quizQuestions[objIndex].a;
     pickB = quizQuestions[objIndex].b;
@@ -138,93 +142,33 @@ function makeQuiz() {
     insertEl.innerHTML += "<button onclick='check()'>Submit Answer</button>";
     
     quizEl.appendChild(insertEl);
-    objIndex++;
-    countdown();
+  } else {
+    console.log("done");
   }
 }
 
 function check() {
+  //checkEl gets the four choices of the questions
   var checkEl = document.getElementsByName('choices');
-  //console.log("In check")
-  //console.log(checkEl.length);
-  //console.log(checkEl);
+  debugger;
+  console.log("In function check");
+
+  //a local checkItem to hold the item that was selected in the radio button
   var checkItem;
-  for( var i = 0; i < checkEl.length; i++) {
-    debugger;
+  for(var i = 0; i < checkEl.length; i++) {
+    //if the choice was selected, then set the checkItem to its value
     if(checkEl[i].checked) {
       checkItem = checkEl[i].value;
-      console.log("checkItem = ", checkItem)
+      console.log("checkItem: ", checkItem);
     }
   }
 
   if(checkItem == quizQuestions[objIndex].answer) {
-    //console.log("In the compare: ")
-    console.log("CheckItem: ", checkItem, "ArrayindexValue: ", quizQuestions[objIndex].answer)
-  } else {
-    timeLeft -= 10;
-    console.log("Time Left: ", timeLeft);
+    userScore++;
+  }else{
+    timeLeft = timeLeft - 5;
   }
+  objIndex++;
+  makeQuiz();
 }
 
-/*
-function makeQuiz(q) {
-  //selecting the start button
-var quiz = document.getElementById('startBtn');
-startBtn.addEventListner('click', function() {
- var formEl = document.getElementById('form-group');
-  formEl.textContent = q.question;
-  var show = document.querySelector('.form-group');
-  show.forEach(function(element, index) {
-    element.textContent = q.answers[index];
-    element.addEventListner('click', function() {
-      if(q.correctAns == index) {
-        console.log('Correct Answer');
-      } 
-      else {
-        console.log('Wrong Answer!');
-      }
-    }
-  }
-}
-
-   
-  });
-
-});
-
-} */
-/*
-var counter = 0;
-var correctAns = 0;
-debugger;
-if(counter >= quizQuestions.length) {
-  quiz.innerHTML = "<h2> You got " + correctAns + "of " + quizQuestions.length + "questions correct</h2>";
-  var createQuestion = document.createElment("form-group");
-  createQuestion = quizQuestions[0];
-}*/
-
-  //an array that stores the the user's answers
-  /*
-  var output = [];
-  var answers;
-
-  for(var i = 0; i < questions.length; i++) {
-    answers = [];
-    for(letter in questions[i].answers){
-      answers.push('<label> <input type="radio" name="question'+i+'" value="'+letter+'">'
-      + letter + ': ' + questions[i].answers[letter] + '<label>');
-
-    }
-    output.push('<div class="question">' + questions[i].question + '<div>'
-      +'<div class="answers">' + answers.join('') + '</div>');
-  }
-  quiz.innerHTML = output.join('');
-}*/
-
-
-
-
-  //telling the startQuizBtn to listen for a click and call the makeQuiz function
- // makeQuiz(quizQuestions);
- // quiz.addEventListener("click", makeQuiz);
- //countdown();
