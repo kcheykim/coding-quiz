@@ -2,6 +2,7 @@ var buttonEl = document.querySelector(".startBtn");
 var quizEl = document.querySelector(".info-box");
 var timerEl = document.getElementById('timer');
 var objIndex = 0;
+var timeLeft = 150;
 
 
 //creating an array of 10 objects with question and list of answers to choose from
@@ -88,10 +89,16 @@ const quizQuestions = [
   }
 ];
 
-buttonEl.addEventListener("click", makeQuiz);
+
+buttonEl.addEventListener("click", outputQuiz);
+
+function outputQuiz() {
+  if(buttonEl){
+    makeQuiz();
+  }
+}
 
 function countdown() {
-  var timeLeft = 150;
   var timeInterval = setInterval(function() {
     timerEl.textContent = "Time: " + timeLeft;
 
@@ -108,7 +115,6 @@ function makeQuiz() {
   //declare local variables for questions, 4 choices, and correct answers
   var quest, pickA, pickB, pickC, pickD, ans;
    //= quizQuestions[aIndex].question;
-
   var insertEl = document.createElement("p");
   //creating an insertEl at the <p> tag
 
@@ -126,26 +132,37 @@ function makeQuiz() {
 
     insertEl.innerHTML = "<h3>" + quest + "</h3>";
     insertEl.innerHTML += "<label> <input type='radio' name='choices' value='a'> " + pickA + "</label> <br>";
-    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='a'> " + pickB + "</label> <br>";
-    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='a'> " + pickC + "</label> <br>";
-    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='a'> " + pickD + "</label> <br>";
-    insertEl.innerHTML += "<button onclick='check()'> Submit Answer </button>";
+    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='b'> " + pickB + "</label> <br>";
+    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='c'> " + pickC + "</label> <br>";
+    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='d'> " + pickD + "</label> <br>";
+    insertEl.innerHTML += "<button onclick='check()'>Submit Answer</button>";
     
     quizEl.appendChild(insertEl);
     objIndex++;
     countdown();
-
   }
 }
 
-function checkAnswer() {
+function check() {
   var checkEl = document.getElementsByName('choices');
+  //console.log("In check")
+  //console.log(checkEl.length);
+  //console.log(checkEl);
   var checkItem;
   for( var i = 0; i < checkEl.length; i++) {
+    debugger;
     if(checkEl[i].checked) {
-      checkItem = checkEl[i].answer;
-
+      checkItem = checkEl[i].value;
+      console.log("checkItem = ", checkItem)
     }
+  }
+
+  if(checkItem == quizQuestions[objIndex].answer) {
+    //console.log("In the compare: ")
+    console.log("CheckItem: ", checkItem, "ArrayindexValue: ", quizQuestions[objIndex].answer)
+  } else {
+    timeLeft -= 10;
+    console.log("Time Left: ", timeLeft);
   }
 }
 
