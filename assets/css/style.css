@@ -37,13 +37,13 @@
   
   .high-score {
     justify-content: flex-start;
-    width: 85%;
+    /*width: 85%;*/
   
   }
   
   .timer {
     justify-content: flex-end;
-    width: 15%;
+    /*width: 15%;*/
   }
   
   .page-title {
@@ -73,7 +73,9 @@
   }
   
   .form-group {
-    align-items: center;
+    text-align: center;
+    font-size: 36px;
+    color: var(--tertiary);
   }
   
   .startBtn {
