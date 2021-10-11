@@ -152,15 +152,11 @@ function makeQuiz() {
     insertEl.innerHTML += "<label> <input type='radio' name='choices' value='b'> " + pickB + "</label> <br>";
     insertEl.innerHTML += "<label> <input type='radio' name='choices' value='c'> " + pickC + "</label> <br>";
     insertEl.innerHTML += "<label> <input type='radio' name='choices' value='d'> " + pickD + "</label> <br>";
-    insertEl.innerHTML += "<button  type='submit' onclick='check()'>Submit Answer</button>";
+    insertEl.innerHTML += "<button id='selection' type='submit' onclick='check()'>Submit Answer</button>";
     
     quizEl.appendChild(insertEl);
   } else {
-    quizEl.innerHTML = "";
-    insertEl.innerHTML += "<h3>All Done</h3>";
-    insertEl.innerHTML += "<h4>Your Final Score is: " + userScore + "</h4>";
-    insertEl.innerHTML += "<label> <input type='text' name='initial'></label>"
-    quizEl.appendChild(insertEl);
+    getHighScoreLog();
   }
 }
 
@@ -179,10 +175,11 @@ function check() {
       checkItem = checkEl[i].value;
     }
   }
+
   if(checkItem === null) {
     check();
   }
- if(checkItem == quizQuestions[objIndex].answer) {
+ if(checkItem === quizQuestions[objIndex].answer) {
     confirmation.textContent = "😀 CORRECT 😀";
     if (objIndex === quizQuestions.length){
       confirmation.textContent = "";
@@ -200,3 +197,34 @@ function check() {
   makeQuiz();
 }
 
+function getHighScoreLog() {
+  var userEl = document.createElement("p");
+  quizEl.innerHTML = "";
+    userEl.innerHTML += "<h3>All Done</h3>";
+    userEl.innerHTML += "<h4>Your Final Score is: " + userScore + "</h4>";
+    userEl.innerHTML += "<label> <input type='text' id='yourInitial' placeholder='Your Initial'></label>";
+    userEl.innerHTML += "<button id='initial' type='submit' onclick='check()'>Submit</button>";
+
+    quizEl.appendChild(userEl);
+
+  var userInfoEl = document.querySelector('#yourInitial');
+  console.log(userInfoEl);
+  var userBtn = document.querySelector("#initial");
+
+  userBtn.addEventListener("click", function(event) {
+
+  var user = {
+    initial: userInfoEl.value,
+    hscore: highscore
+  };
+  
+ // debugger;
+  localStorage.setItem("user", JSON.stringify(user));
+  //debugger;
+  //console(localStorage.setItem("user", JSON.stringify(user)));
+  //debugger;
+  var store = JSON.parse(localStorage.getItem("user"));
+  //debugger;
+  console.log(store);
+  });
+}
