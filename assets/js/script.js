@@ -6,6 +6,7 @@ var objIndex = 0;
 var highscore = 0;
 var userScore = 0;
 var timeLeft = 150;
+var highScoreList = JSON.parse(localStorage.getItem('user')) || [];
 
 
 //creating an array of 10 objects with question and list of answers to choose from
@@ -156,11 +157,67 @@ function makeQuiz() {
     
     quizEl.appendChild(insertEl);
   } else {
-    getHighScoreLog();
-  }
+    //var userEl = document.createElement("p");
+    console.log("creating all done");
+  quizEl.innerHTML = "";
+  insertEl.innerHTML += "<h3>All Done</h3>";
+  insertEl.innerHTML += "<h4>Your Final Score is: " + userScore + "</h4>";
+ // insertEl.innerHTML += "<label> <input type='text' id='yourInitial' placeholder='Your Initial'></label>";
+  var newLabel = document.createElement('label');
+  var newInput = document.createElement('input');
+  newInput.setAttribute('id', 'yourInitial');
+  newInput.setAttribute('placeholder', 'Your Initial');
+  newLabel.appendChild(newInput);
+  insertEl.appendChild(newLabel);
+
+  //insertEl.innerHTML += "<button id='initial' type='submit''>Submit</button>";
+  var newBtn = document.createElement('button');
+  newBtn.setAttribute('id', 'initial');
+  newBtn.type = 'submit';
+  insertEl.appendChild(newBtn);
+  quizEl.appendChild(insertEl);
+
+    var confirm = document.querySelector('#form-group');
+    console.log(confirm);
+    confirm.textContent = "";
+    //quizEl.innerHTML = "";
+     userInfoEl = newInput;
+    console.log(userInfoEl);
+   userBtn = newBtn;
+    console.log("Btn", userBtn);
+    userBtn.addEventListener("click", () => {
+      var userInputEl = document.getElementById('yourInitial'); 
+        var user = {
+          initial: userInfoEl.value,
+          hscore: highscore
+        };
+        console.log(highScoreList);
+        highScoreList.push(user);
+     var newParagraph = document.createElement('p');
+        // debugger;
+        localStorage.setItem("user", JSON.stringify(highScoreList));
+        //debugger;
+        //console(localStorage.setItem("user", JSON.stringify(user)));
+        //debugger;
+        var store = JSON.parse(localStorage.getItem("user"));  
+     
+  
+        console.log(store);
+        //console.log(localStorage.clear);
+        newParagraph.innerHTML += "<h3>High Scores</h3>";
+        newParagraph.innerHTML += "<li>" + store.initial + " " + store.hscore + "</li>";
+        newParagraph.innerHTML += "<button id='return' type='submit' onclick='outputQuiz()'>Go Back</button>";
+        newParagraph.innerHTML += "<button id='clear' type='submit' onclick='localstorage.clear()'>Clear High Score</button>";
+        quizEl.appendChild(newParagraph);
+      });
+   // getHighScore();
+
+    //getHighScoreLog();
+  } 
 }
 
 function check() {
+  
   //checkEl gets the four choices of the questions
   var checkEl = document.getElementsByName('choices');
   
@@ -175,10 +232,11 @@ function check() {
       checkItem = checkEl[i].value;
     }
   }
-
   if(checkItem === null) {
-    check();
+   // console.log("Nothing found");
+    return;
   }
+
  if(checkItem === quizQuestions[objIndex].answer) {
     confirmation.textContent = "😀 CORRECT 😀";
     if (objIndex === quizQuestions.length){
@@ -197,34 +255,43 @@ function check() {
   makeQuiz();
 }
 
-function getHighScoreLog() {
-  var userEl = document.createElement("p");
+function getHighScore() {
+  var confirm = document.querySelector('#form-group');
+  console.log(confirm);
+  confirm.textContent = "";
   quizEl.innerHTML = "";
-    userEl.innerHTML += "<h3>All Done</h3>";
-    userEl.innerHTML += "<h4>Your Final Score is: " + userScore + "</h4>";
-    userEl.innerHTML += "<label> <input type='text' id='yourInitial' placeholder='Your Initial'></label>";
-    userEl.innerHTML += "<button id='initial' type='submit' onclick='check()'>Submit</button>";
-
-    quizEl.appendChild(userEl);
-
   var userInfoEl = document.querySelector('#yourInitial');
   console.log(userInfoEl);
-  var userBtn = document.querySelector("#initial");
+  var userBtn = document.getElementById('initial');
+  console.log("Btn", userBtn);
+  /*userBtn.addEventListener("click", () => {
 
-  userBtn.addEventListener("click", function(event) {
-
-  var user = {
-    initial: userInfoEl.value,
-    hscore: highscore
-  };
-  
- // debugger;
-  localStorage.setItem("user", JSON.stringify(user));
-  //debugger;
-  //console(localStorage.setItem("user", JSON.stringify(user)));
-  //debugger;
-  var store = JSON.parse(localStorage.getItem("user"));
-  //debugger;
-  console.log(store);
-  });
+      var user = {
+        initial: userInfoEl.value(),
+        hscore: highscore
+      };
+   
+      // debugger;
+      localStorage.setItem("user", JSON.stringify(user));
+      //debugger;
+      //console(localStorage.setItem("user", JSON.stringify(user)));
+      //debugger;
+      var store = JSON.parse(localStorage.getItem("user"));  
+    });
+      debugger;
+      console.log(store);
+      // });
+      debugger;
+      var userInputEl = document.createElement("p");
+      debugger;
+     
+      debugger;
+      console.log(store);
+      console.log(localStorage.clear);
+      userInputEl.innerHTML += "<h3>High Scores</h3>";
+      userInputEl.innerHTML += "<li>" + store + "</li>";
+      userInputEl.innerHTML += "<button id='return' type='submit' onclick='outputQuiz()'>Go Back</button>";
+      userInputEl.innerHTML += "<button id='clear' type='submit' onclick='localstorage.clear()'>Clear High Score</button>";
+      quizEl.appendChild(userInputEl);*/
+   
 }
