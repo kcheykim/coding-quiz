@@ -1,4 +1,5 @@
 var buttonEl = document.querySelector(".startBtn");
+var mainEl = document.querySelector(".page-content");
 var quizEl = document.querySelector(".info-box");
 
 var scoreEl = document.getElementById('high-score');
@@ -99,8 +100,40 @@ function outputQuiz() {
   if(buttonEl){
     makeQuiz();
     countdown();
+    buttonEl.style.display = "none";
   } 
-  buttonEl.style.display = "none";
+}
+
+function restart() {
+  var returnBtn = document.querySelector("#return");
+  returnBtn.addEventListener("click", restart);
+
+  if(returnBtn) {
+    //outputQuiz();
+  //}
+ //var mainTitle= document.createElement("h1");
+ //var mainTitle = "";
+ //mainTitle.innerHTML = "<h1>Coding Quiz Challenge</h1>";
+ //mainEl.appendChild(mainEl);
+ var mainParaEl = document.createElement("p");
+    quizEl.innerHTML = "";
+  mainParaEl.className = "info-box";
+  mainParaEl.innerHTML = "<p>Try to answer the following code-related questions within the time limit."
+  mainParaEl.innerHTML += "Keep in mind that incorrect answers will penalize your score or time by ten seconds!</p>" 
+  quizEl.appendChild(mainParaEl);
+  buttonEl.style.display = "block";
+  timeLeft = 0;
+  userScore = 0;
+  highscore = 0;
+  objIndex = 0;
+  }
+  /*
+  if(buttonEl){
+    makeQuiz();
+    countdown();
+    buttonEl.style.display = "none";
+  } */
+  
 }
 
 function countdown() {
@@ -158,7 +191,7 @@ function makeQuiz() {
     quizEl.appendChild(insertEl);
   } else {
     //var userEl = document.createElement("p");
-    console.log("creating all done");
+ 
   quizEl.innerHTML = "";
   insertEl.innerHTML += "<h3>All Done</h3>";
   insertEl.innerHTML += "<h4>Your Final Score is: " + userScore + "</h4>";
@@ -177,7 +210,8 @@ function makeQuiz() {
   insertEl.appendChild(newBtn);
   quizEl.appendChild(insertEl);
 
-    var confirm = document.querySelector('#form-group');
+    //var confirm = document.querySelector('#form-group');
+    var confirm = document.querySelector(".info-box2");
     console.log(confirm);
     confirm.textContent = "";
     //quizEl.innerHTML = "";
@@ -196,23 +230,23 @@ function makeQuiz() {
      var newParagraph = document.createElement('p');
         // debugger;
         localStorage.setItem("user", JSON.stringify(highScoreList));
-        //debugger;
-        //console(localStorage.setItem("user", JSON.stringify(user)));
-        //debugger;
+
         var store = JSON.parse(localStorage.getItem("user"));  
      
   
         console.log(store);
         //console.log(localStorage.clear);
         newParagraph.innerHTML += "<h3>High Scores</h3>";
-        newParagraph.innerHTML += "<li>" + store.initial + " " + store.hscore + "</li>";
-        newParagraph.innerHTML += "<button id='return' type='submit' onclick='outputQuiz()'>Go Back</button>";
-        newParagraph.innerHTML += "<button id='clear' type='submit' onclick='localstorage.clear()'>Clear High Score</button>";
+        for(var j = 0; j < highScoreList.length; j++){
+        //newParagraph.innerHTML += "<li>" + store.initial + " " + store.hscore + "</li>";
+        newParagraph.innerHTML += '<li>' + highScoreList[j].initial + " " + highScoreList[j].hscore + '</li>';
+        }
+        newParagraph.innerHTML += "<button id='return' type='submit' onclick='restart()'>Go Back</button>";
+        newParagraph.innerHTML += "<button id='clear' type='submit' onclick='clear()'>Clear High Score</button>";
         quizEl.appendChild(newParagraph);
-      });
-   // getHighScore();
 
-    //getHighScoreLog();
+      });
+
   } 
 }
 
@@ -221,8 +255,8 @@ function check() {
   //checkEl gets the four choices of the questions
   var checkEl = document.getElementsByName('choices');
   
-  var confirmation = document.querySelector('#form-group');
-
+  var confirmation = document.querySelector('#message');
+  confirmation = document.createElement("p");
 
   //a local checkItem to hold the item that was selected in the radio button
   var checkItem = null;
@@ -233,7 +267,6 @@ function check() {
     }
   }
   if(checkItem === null) {
-   // console.log("Nothing found");
     return;
   }
 
@@ -294,4 +327,17 @@ function getHighScore() {
       userInputEl.innerHTML += "<button id='clear' type='submit' onclick='localstorage.clear()'>Clear High Score</button>";
       quizEl.appendChild(userInputEl);*/
    
+}
+
+function clear() {
+  if(localStorage){}
+  for(var k = 0; k < highScoreList.length; k++) {
+    localStorage.removeItem(highScoreList[k]);
+  }
+  //localStorage.clear(highScoreList[k]);
+  //}
+  //if(localStorage){
+  localStorage.clear();
+  getHighScore();
+
 }
