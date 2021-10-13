@@ -253,23 +253,17 @@ function getHighScore(insertEl) {
       newParagraph.innerHTML += '<li>' + highScoreList[j].initial + " " + highScoreList[j].hscore + '</li>';
     }
     newParagraph.innerHTML += "<button id='return' type='submit' onclick='restart()'>Go Back</button>";
-    newParagraph.innerHTML += "<button id='clear' type='submit' onclick='clearHighScore()'>Go Back</button>";
-
-    //newParagraph.innerHTML += "<button id='clear' type='submit' onclick='clear()'>Clear High Score</button>";
+    newParagraph.innerHTML += "<button id='clear' type='submit' onclick='clearHighScore()'>Clear High Scores</button>";
     quizEl.appendChild(newParagraph);
   });
 }
 
 function clearHighScore() {
-
-  window.alert("in here");
-  //var returnBtn = document.querySelector("#return");
-  //returnBtn.addEventListener("click", restart);
-  console.log("I am in here");
   var clearBtn = document.querySelector("#clear");
   clearBtn.addEventListener("click", clearHighScore);
    if(clearBtn) {
       localStorage.clear();
+      highScoreList = [];
       restart();
   }
 }
