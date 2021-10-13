@@ -109,31 +109,18 @@ function restart() {
   returnBtn.addEventListener("click", restart);
 
   if(returnBtn) {
-    //outputQuiz();
-  //}
- //var mainTitle= document.createElement("h1");
- //var mainTitle = "";
- //mainTitle.innerHTML = "<h1>Coding Quiz Challenge</h1>";
- //mainEl.appendChild(mainEl);
- var mainParaEl = document.createElement("p");
+  var mainParaEl = document.createElement("p");
     quizEl.innerHTML = "";
-  mainParaEl.className = "info-box";
-  mainParaEl.innerHTML = "<p>Try to answer the following code-related questions within the time limit."
-  mainParaEl.innerHTML += "Keep in mind that incorrect answers will penalize your score or time by ten seconds!</p>" 
-  quizEl.appendChild(mainParaEl);
-  buttonEl.style.display = "block";
-  timeLeft = 0;
-  userScore = 0;
-  highscore = 0;
-  objIndex = 0;
-  }
-  /*
-  if(buttonEl){
-    makeQuiz();
-    countdown();
-    buttonEl.style.display = "none";
-  } */
-  
+    mainParaEl.className = "info-box";
+    mainParaEl.innerHTML = "<p>Try to answer the following code-related questions within the time limit."
+    mainParaEl.innerHTML += "Keep in mind that incorrect answers will penalize your score or time by ten seconds!</p>" 
+    quizEl.appendChild(mainParaEl);
+    buttonEl.style.display = "block";
+    timeLeft = 0;
+    userScore = 0;
+    highscore = 0;
+    objIndex = 0;
+    }
 }
 
 function countdown() {
@@ -191,61 +178,8 @@ function makeQuiz() {
     quizEl.appendChild(insertEl);
   } else {
     //var userEl = document.createElement("p");
- 
-  quizEl.innerHTML = "";
-  insertEl.innerHTML += "<h3>All Done</h3>";
-  insertEl.innerHTML += "<h4>Your Final Score is: " + userScore + "</h4>";
- // insertEl.innerHTML += "<label> <input type='text' id='yourInitial' placeholder='Your Initial'></label>";
-  var newLabel = document.createElement('label');
-  var newInput = document.createElement('input');
-  newInput.setAttribute('id', 'yourInitial');
-  newInput.setAttribute('placeholder', 'Your Initial');
-  newLabel.appendChild(newInput);
-  insertEl.appendChild(newLabel);
+    getHighScore(insertEl);
 
-  //insertEl.innerHTML += "<button id='initial' type='submit''>Submit</button>";
-  var newBtn = document.createElement('button');
-  newBtn.setAttribute('id', 'initial');
-  newBtn.type = 'submit';
-  insertEl.appendChild(newBtn);
-  quizEl.appendChild(insertEl);
-
-    //var confirm = document.querySelector('#form-group');
-    var confirm = document.querySelector(".info-box2");
-    console.log(confirm);
-    confirm.textContent = "";
-    //quizEl.innerHTML = "";
-     userInfoEl = newInput;
-    console.log(userInfoEl);
-   userBtn = newBtn;
-    console.log("Btn", userBtn);
-    userBtn.addEventListener("click", () => {
-      var userInputEl = document.getElementById('yourInitial'); 
-        var user = {
-          initial: userInfoEl.value,
-          hscore: highscore
-        };
-        console.log(highScoreList);
-        highScoreList.push(user);
-     var newParagraph = document.createElement('p');
-        // debugger;
-        localStorage.setItem("user", JSON.stringify(highScoreList));
-
-        var store = JSON.parse(localStorage.getItem("user"));  
-     
-  
-        console.log(store);
-        //console.log(localStorage.clear);
-        newParagraph.innerHTML += "<h3>High Scores</h3>";
-        for(var j = 0; j < highScoreList.length; j++){
-        //newParagraph.innerHTML += "<li>" + store.initial + " " + store.hscore + "</li>";
-        newParagraph.innerHTML += '<li>' + highScoreList[j].initial + " " + highScoreList[j].hscore + '</li>';
-        }
-        newParagraph.innerHTML += "<button id='return' type='submit' onclick='restart()'>Go Back</button>";
-        newParagraph.innerHTML += "<button id='clear' type='submit' onclick='clear()'>Clear High Score</button>";
-        quizEl.appendChild(newParagraph);
-
-      });
 
   } 
 }
@@ -288,56 +222,54 @@ function check() {
   makeQuiz();
 }
 
-function getHighScore() {
-  var confirm = document.querySelector('#form-group');
-  console.log(confirm);
-  confirm.textContent = "";
+function getHighScore(insertEl) {
   quizEl.innerHTML = "";
-  var userInfoEl = document.querySelector('#yourInitial');
-  console.log(userInfoEl);
-  var userBtn = document.getElementById('initial');
-  console.log("Btn", userBtn);
-  /*userBtn.addEventListener("click", () => {
-
+  insertEl.innerHTML += "<h3>All Done</h3>";
+  insertEl.innerHTML += "<h4>Your Final Score is: " + userScore + "</h4>";
+  insertEl.innerHTML += "<label> <input type='text' id='yourInitial' placeholder='Your Initial'></label>";
+  quizEl.appendChild(insertEl);
+    
+  insertEl.innerHTML += "<button id='initial' type='submit''>Submit</button>";
+  var newBtn = document.querySelector("#initial");
+  quizEl.appendChild(insertEl);
+    
+  var confirm = document.querySelector(".info-box2");
+  confirm.textContent = "";
+  
+  newBtn.addEventListener("click", () => {
+    var userInitialEl = document.getElementById('yourInitial').value;
       var user = {
-        initial: userInfoEl.value(),
+        initial: userInitialEl,
         hscore: highscore
       };
-   
-      // debugger;
-      localStorage.setItem("user", JSON.stringify(user));
-      //debugger;
-      //console(localStorage.setItem("user", JSON.stringify(user)));
-      //debugger;
-      var store = JSON.parse(localStorage.getItem("user"));  
-    });
-      debugger;
-      console.log(store);
-      // });
-      debugger;
-      var userInputEl = document.createElement("p");
-      debugger;
-     
-      debugger;
-      console.log(store);
-      console.log(localStorage.clear);
-      userInputEl.innerHTML += "<h3>High Scores</h3>";
-      userInputEl.innerHTML += "<li>" + store + "</li>";
-      userInputEl.innerHTML += "<button id='return' type='submit' onclick='outputQuiz()'>Go Back</button>";
-      userInputEl.innerHTML += "<button id='clear' type='submit' onclick='localstorage.clear()'>Clear High Score</button>";
-      quizEl.appendChild(userInputEl);*/
-   
+    highScoreList.push(user);
+
+    var newParagraph = document.createElement('p');
+    localStorage.setItem("user", JSON.stringify(highScoreList));
+    var store = JSON.parse(localStorage.getItem("user"));  
+    quizEl.innerHTML = "";
+    newParagraph.innerHTML += "<h3>High Scores</h3>";
+    for(var j = 0; j < highScoreList.length; j++){
+      newParagraph.innerHTML += '<li>' + highScoreList[j].initial + " " + highScoreList[j].hscore + '</li>';
+    }
+    newParagraph.innerHTML += "<button id='return' type='submit' onclick='restart()'>Go Back</button>";
+    newParagraph.innerHTML += "<button id='clear' type='submit' onclick='clearHighScore()'>Go Back</button>";
+
+    //newParagraph.innerHTML += "<button id='clear' type='submit' onclick='clear()'>Clear High Score</button>";
+    quizEl.appendChild(newParagraph);
+  });
 }
 
-function clear() {
-  if(localStorage){}
-  for(var k = 0; k < highScoreList.length; k++) {
-    localStorage.removeItem(highScoreList[k]);
-  }
-  //localStorage.clear(highScoreList[k]);
-  //}
-  //if(localStorage){
-  localStorage.clear();
-  getHighScore();
+function clearHighScore() {
 
+  window.alert("in here");
+  //var returnBtn = document.querySelector("#return");
+  //returnBtn.addEventListener("click", restart);
+  console.log("I am in here");
+  var clearBtn = document.querySelector("#clear");
+  clearBtn.addEventListener("click", clearHighScore);
+   if(clearBtn) {
+      localStorage.clear();
+      restart();
+  }
 }
