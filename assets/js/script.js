@@ -2,11 +2,10 @@ var buttonEl = document.querySelector(".startBtn");
 var mainEl = document.querySelector(".page-content");
 var quizEl = document.querySelector(".info-box");
 
-var scoreEl = document.getElementById('high-score');
+var scoreEl = document.getElementById('your-score');
 var objIndex = 0;
-var highscore = 0;
 var userScore = 0;
-var timeLeft = 150;
+var timeLeft = 100;
 var highScoreList = JSON.parse(localStorage.getItem('user')) || [];
 
 
@@ -100,6 +99,7 @@ function outputQuiz() {
   if(buttonEl){
     makeQuiz();
     countdown();
+    scoreKeeper();
     buttonEl.style.display = "none";
   } 
 }
@@ -112,13 +112,14 @@ function restart() {
   var mainParaEl = document.createElement("p");
     quizEl.innerHTML = "";
     mainParaEl.className = "info-box";
-    mainParaEl.innerHTML = "<p>Try to answer the following code-related questions within the time limit."
-    mainParaEl.innerHTML += "Keep in mind that incorrect answers will penalize your score or time by ten seconds!</p>" 
+    mainParaEl.innerHTML = "<p>Try to answer the following code-related questions within the time limit. "
+    mainParaEl.innerHTML += "Keep in mind that incorrect answers will penalize your time by fifteen seconds! "
+    mainParaEl.innerHTML += "The quiz is over if you ran out of time or you have answered all the questions. "
+    mainParaEl.innerHTML += "You will be able to record you score at the end by entering you inital.</p>" 
     quizEl.appendChild(mainParaEl);
-    buttonEl.style.display = "block";
+    buttonEl.style.display = "inline-block";
     timeLeft = 0;
     userScore = 0;
-    highscore = 0;
     objIndex = 0;
     }
 }
@@ -140,11 +141,6 @@ function countdown() {
 function scoreKeeper() {
   scoreEl.style.width = "85%";
   scoreEl.style.justifyContent = "flex-start";
-
-  userScore += 5;
-  if(userScore > highscore) {
-    highscore = userScore;
-  }
   scoreEl.textContent = "Your Score: " + userScore;
 }
 
@@ -159,7 +155,7 @@ function makeQuiz() {
   //giving its class name as quizList
 
   //insertEl.textContent = "";
-  if(objIndex < quizQuestions.length) {
+  if(objIndex < quizQuestions.length && timeLeft <= 0) {
     quizEl.innerHTML = "";
     quest = quizQuestions[objIndex].question;
     pickA = quizQuestions[objIndex].a;
@@ -179,8 +175,6 @@ function makeQuiz() {
   } else {
     //var userEl = document.createElement("p");
     getHighScore(insertEl);
-
-
   } 
 }
 
@@ -200,6 +194,7 @@ function check() {
       checkItem = checkEl[i].value;
     }
   }
+
   if(checkItem === null) {
     return;
   }
@@ -209,6 +204,7 @@ function check() {
     if (objIndex === quizQuestions.length){
       confirmation.textContent = "";
     }
+    userScore = userScore + 5;
     scoreKeeper();
   }else{
     timeLeft = timeLeft - 10;
@@ -240,7 +236,7 @@ function getHighScore(insertEl) {
     var userInitialEl = document.getElementById('yourInitial').value;
       var user = {
         initial: userInitialEl,
-        hscore: highscore
+        hscore: userScore
       };
     highScoreList.push(user);
 
@@ -250,7 +246,8 @@ function getHighScore(insertEl) {
     quizEl.innerHTML = "";
     newParagraph.innerHTML += "<h3>High Scores</h3>";
     for(var j = 0; j < highScoreList.length; j++){
-      newParagraph.innerHTML += '<li>' + highScoreList[j].initial + " " + highScoreList[j].hscore + '</li>';
+      newParagraph.innerHTML += "<table><tr><td>Initial</td> <td>Scores</td> </tr><tr><td>" + highScoreList[j].initial + "</td> <td>" + highScoreList[j].hscore + "</td></tr></table>";
+     // newParagraph.innerHTML += '<ol>' + highScoreList[j].initial + " " + highScoreList[j].hscore + '</ol>';
     }
     newParagraph.innerHTML += "<button id='return' type='submit' onclick='restart()'>Go Back</button>";
     newParagraph.innerHTML += "<button id='clear' type='submit' onclick='clearHighScore()'>Clear High Scores</button>";
@@ -263,7 +260,9 @@ function clearHighScore() {
   clearBtn.addEventListener("click", clearHighScore);
    if(clearBtn) {
       localStorage.clear();
+      window.alert("All scores has been cleared.");
       highScoreList = [];
+      timeLeft = 100;
       restart();
   }
 }
