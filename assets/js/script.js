@@ -7,8 +7,7 @@ var objIndex = 0;
 var userScore = 0;
 var timeLeft = 100;
 var highScoreList = JSON.parse(localStorage.getItem('user')) || [];
-
-
+var val = 0;
 //creating an array of 10 objects with question and list of answers to choose from
 const quizQuestions = [
   {
@@ -96,9 +95,9 @@ const quizQuestions = [
 buttonEl.addEventListener("click", outputQuiz);
 
 function outputQuiz() {
-  if(buttonEl){
+  if(buttonEl ){
     makeQuiz();
-    countdown();
+    countdown(val);
     scoreKeeper();
     buttonEl.style.display = "none";
   } 
@@ -110,18 +109,42 @@ function restart() {
 
   if(returnBtn) {
   var mainParaEl = document.createElement("p");
+    mainParaEl.style.width = "100%";
     quizEl.innerHTML = "";
     mainParaEl.className = "info-box";
-    mainParaEl.innerHTML = "<p>Try to answer the following code-related questions within the time limit. "
+    mainParaEl.innerHTML = "Try to answer the following code-related questions within the time limit. "
     mainParaEl.innerHTML += "Keep in mind that incorrect answers will penalize your time by fifteen seconds! "
     mainParaEl.innerHTML += "The quiz is over if you ran out of time or you have answered all the questions. "
-    mainParaEl.innerHTML += "You will be able to record you score at the end by entering you inital.</p>" 
+    mainParaEl.innerHTML += "You will be able to record you score at the end by entering you inital and submit." 
     quizEl.appendChild(mainParaEl);
     buttonEl.style.display = "inline-block";
-    timeLeft = 0;
+    
+
+    timeLeft = 100;
     userScore = 0;
     objIndex = 0;
     }
+}
+
+function clearHighScore(user) {
+  var clearBtn = document.querySelector("#clear");
+  clearBtn.addEventListener("click", clearHighScore);
+   if(clearBtn) {
+      localStorage.clear();
+      var hscoreOutput = document.createElement('p');
+      var store = JSON.parse(localStorage.getItem("user"));  
+      quizEl.innerHTML = "";
+      hscoreOutput.innerHTML += "<h3>High Scores</h3>";
+    for(var j = 0; j < highScoreList.length; j++){
+      hscoreOutput.innerHTML += "<table><tr><td>Initial</td> <td>Scores</td> </tr><tr><td>" + highScoreList[j].initial + "</td> <td>" + highScoreList[j].hscore + "</td></tr></table>";
+    }
+    hscoreOutput.innerHTML += "<button id='return' type='submit' onclick='restart()'>Go Back</button>";
+    quizEl.appendChild(hscoreOutput);
+      window.alert("All scores has been cleared.");
+      highScoreList = [];
+      timeLeft = 100;
+      restart();
+   }
 }
 
 function countdown() {
@@ -130,8 +153,11 @@ function countdown() {
     timerEl.style.width = "15%";
     timerEl.style.float = "flex-end";
     timerEl.textContent = "Time: " + timeLeft;
-
+    if(val === 0) {
     timeLeft--;
+    } else {
+      timeLeft = timeLeft;
+    }
     if(timeLeft < 0) {
       clearInterval(timeInterval);
     }
@@ -142,40 +168,6 @@ function scoreKeeper() {
   scoreEl.style.width = "85%";
   scoreEl.style.justifyContent = "flex-start";
   scoreEl.textContent = "Your Score: " + userScore;
-}
-
-function makeQuiz() {
-  //declare local variables for questions, 4 choices, and correct answers
-  var quest, pickA, pickB, pickC, pickD, ans;
-   //= quizQuestions[aIndex].question;
-  var insertEl = document.createElement("p");
-  //creating an insertEl at the <p> tag
-
-  insertEl.className = "quizList";
-  //giving its class name as quizList
-
-  //insertEl.textContent = "";
-  if(objIndex < quizQuestions.length && timeLeft <= 0) {
-    quizEl.innerHTML = "";
-    quest = quizQuestions[objIndex].question;
-    pickA = quizQuestions[objIndex].a;
-    pickB = quizQuestions[objIndex].b;
-    pickC = quizQuestions[objIndex].c;
-    pickD = quizQuestions[objIndex].d;
-    ans = quizQuestions[objIndex].answer;
-
-    insertEl.innerHTML = "<h3>" + quest + "</h3>";
-    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='a'> " + pickA + "</label> <br>";
-    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='b'> " + pickB + "</label> <br>";
-    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='c'> " + pickC + "</label> <br>";
-    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='d'> " + pickD + "</label> <br>";
-    insertEl.innerHTML += "<button id='selection' type='submit' onclick='check()'>Submit Answer</button>";
-    
-    quizEl.appendChild(insertEl);
-  } else {
-    //var userEl = document.createElement("p");
-    getHighScore(insertEl);
-  } 
 }
 
 function check() {
@@ -216,7 +208,43 @@ function check() {
 
   objIndex++;
   makeQuiz();
+  
 }
+
+function makeQuiz() {
+  //declare local variables for questions, 4 choices, and correct answers
+  var quest, pickA, pickB, pickC, pickD, ans;
+   //= quizQuestions[aIndex].question;
+  var insertEl = document.createElement("p");
+  //creating an insertEl at the <p> tag
+
+  insertEl.className = "quizList";
+  //giving its class name as quizList
+
+ // insertEl.textContent = "";
+  if(objIndex < quizQuestions.length && timeLeft > 0) {
+    quizEl.innerHTML = "";
+    quest = quizQuestions[objIndex].question;
+    pickA = quizQuestions[objIndex].a;
+    pickB = quizQuestions[objIndex].b;
+    pickC = quizQuestions[objIndex].c;
+    pickD = quizQuestions[objIndex].d;
+    ans = quizQuestions[objIndex].answer;
+
+    insertEl.innerHTML = "<h3>" + quest + "</h3>";
+    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='a'> " + pickA + "</label> <br>";
+    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='b'> " + pickB + "</label> <br>";
+    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='c'> " + pickC + "</label> <br>";
+    insertEl.innerHTML += "<label> <input type='radio' name='choices' value='d'> " + pickD + "</label> <br>";
+    insertEl.innerHTML += "<button id='selection' type='submit' onclick='check()'>Submit Answer</button>";
+    quizEl.appendChild(insertEl);
+  } else {
+    getHighScore(insertEl);
+    var val = 1;
+    countdown(val);
+  }
+}
+
 
 function getHighScore(insertEl) {
   quizEl.innerHTML = "";
@@ -253,16 +281,4 @@ function getHighScore(insertEl) {
     newParagraph.innerHTML += "<button id='clear' type='submit' onclick='clearHighScore()'>Clear High Scores</button>";
     quizEl.appendChild(newParagraph);
   });
-}
-
-function clearHighScore() {
-  var clearBtn = document.querySelector("#clear");
-  clearBtn.addEventListener("click", clearHighScore);
-   if(clearBtn) {
-      localStorage.clear();
-      window.alert("All scores has been cleared.");
-      highScoreList = [];
-      timeLeft = 100;
-      restart();
-  }
 }
