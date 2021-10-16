@@ -8,6 +8,7 @@ var userScore = 0;
 var timeLeft = 100;
 var highScoreList = JSON.parse(localStorage.getItem('user')) || [];
 var val = 0;
+
 //creating an array of 10 objects with question and list of answers to choose from
 const quizQuestions = [
   {
@@ -106,6 +107,7 @@ function outputQuiz() {
 function restart() {
   var returnBtn = document.querySelector("#return");
   returnBtn.addEventListener("click", restart);
+  
 
   if(returnBtn) {
   var mainParaEl = document.createElement("p");
@@ -117,13 +119,13 @@ function restart() {
     mainParaEl.innerHTML += "The quiz is over if you ran out of time or you have answered all the questions. "
     mainParaEl.innerHTML += "You will be able to record you score at the end by entering you inital and submit." 
     quizEl.appendChild(mainParaEl);
-    buttonEl.style.display = "inline-block";
-    
 
+    buttonEl.style.display = "inline-block";
     timeLeft = 100;
     userScore = 0;
     objIndex = 0;
     }
+   
 }
 
 function clearHighScore(user) {
@@ -131,18 +133,7 @@ function clearHighScore(user) {
   clearBtn.addEventListener("click", clearHighScore);
    if(clearBtn) {
       localStorage.clear();
-      var hscoreOutput = document.createElement('p');
-      var store = JSON.parse(localStorage.getItem("user"));  
-      quizEl.innerHTML = "";
-      hscoreOutput.innerHTML += "<h3>High Scores</h3>";
-    for(var j = 0; j < highScoreList.length; j++){
-      hscoreOutput.innerHTML += "<table><tr><td>Initial</td> <td>Scores</td> </tr><tr><td>" + highScoreList[j].initial + "</td> <td>" + highScoreList[j].hscore + "</td></tr></table>";
-    }
-    hscoreOutput.innerHTML += "<button id='return' type='submit' onclick='restart()'>Go Back</button>";
-    quizEl.appendChild(hscoreOutput);
       window.alert("All scores has been cleared.");
-      highScoreList = [];
-      timeLeft = 100;
       restart();
    }
 }
@@ -170,13 +161,13 @@ function scoreKeeper() {
   scoreEl.textContent = "Your Score: " + userScore;
 }
 
-function check() {
+function checkAns() {
   
   //checkEl gets the four choices of the questions
   var checkEl = document.getElementsByName('choices');
   
   var confirmation = document.querySelector('#message');
-  confirmation = document.createElement("p");
+ // confirmation = document.createElement("p");
 
   //a local checkItem to hold the item that was selected in the radio button
   var checkItem = null;
@@ -193,20 +184,23 @@ function check() {
 
  if(checkItem === quizQuestions[objIndex].answer) {
     confirmation.textContent = "😀 CORRECT 😀";
-    if (objIndex === quizQuestions.length){
-      confirmation.textContent = "";
-    }
+  //  if (objIndex === quizQuestions.length){
+   //   confirmation.textContent = "";
+   // }
     userScore = userScore + 5;
     scoreKeeper();
   }else{
     timeLeft = timeLeft - 10;
     confirmation.textContent = "😭 WRONG 😭"
-    if (objIndex === quizQuestions.length){
-      confirmation.textContent = "";
-    }
+  //  if (objIndex === quizQuestions.length){
+    //  confirmation.textContent = "";
+ //   }
   }
 
   objIndex++;
+  if (objIndex === quizQuestions.length){
+     confirmation.textContent = "";
+   }
   makeQuiz();
   
 }
@@ -236,12 +230,10 @@ function makeQuiz() {
     insertEl.innerHTML += "<label> <input type='radio' name='choices' value='b'> " + pickB + "</label> <br>";
     insertEl.innerHTML += "<label> <input type='radio' name='choices' value='c'> " + pickC + "</label> <br>";
     insertEl.innerHTML += "<label> <input type='radio' name='choices' value='d'> " + pickD + "</label> <br>";
-    insertEl.innerHTML += "<button id='selection' type='submit' onclick='check()'>Submit Answer</button>";
+    insertEl.innerHTML += "<button id='selection' type='submit' onclick='checkAns()'>Submit Answer</button>";
     quizEl.appendChild(insertEl);
   } else {
     getHighScore(insertEl);
-    var val = 1;
-    countdown(val);
   }
 }
 
