@@ -6,6 +6,7 @@ var scoreEl = document.getElementById('your-score');
 var objIndex = 0;
 var userScore = 0;
 var timeLeft = 100;
+var timeStop = 0;
 var highScoreList = JSON.parse(localStorage.getItem('user')) || [];
 var val = 0;
 
@@ -98,13 +99,14 @@ buttonEl.addEventListener("click", outputQuiz);
 function outputQuiz() {
   if(buttonEl ){
     makeQuiz();
-    countdown(val);
+    countdown();
     scoreKeeper();
     buttonEl.style.display = "none";
   } 
 }
 
 function restart() {
+ 
   var returnBtn = document.querySelector("#return");
   returnBtn.addEventListener("click", restart);
   
@@ -121,11 +123,11 @@ function restart() {
     quizEl.appendChild(mainParaEl);
 
     buttonEl.style.display = "inline-block";
-    timeLeft = 100;
     userScore = 0;
     objIndex = 0;
+    timeLeft = 100;
+    timeStop = 0;
     }
-   
 }
 
 function clearHighScore(user) {
@@ -144,11 +146,11 @@ function countdown() {
     timerEl.style.width = "15%";
     timerEl.style.float = "flex-end";
     timerEl.textContent = "Time: " + timeLeft;
-    if(val === 0) {
+   if(timeStop === 0) {
     timeLeft--;
-    } else {
-      timeLeft = timeLeft;
-    }
+   } else {
+  timeLeft = timeStop;
+   }
     if(timeLeft < 0) {
       clearInterval(timeInterval);
     }
@@ -184,17 +186,11 @@ function checkAns() {
 
  if(checkItem === quizQuestions[objIndex].answer) {
     confirmation.textContent = "😀 CORRECT 😀";
-  //  if (objIndex === quizQuestions.length){
-   //   confirmation.textContent = "";
-   // }
     userScore = userScore + 5;
     scoreKeeper();
   }else{
-    timeLeft = timeLeft - 10;
+    timeLeft = timeLeft - 15;
     confirmation.textContent = "😭 WRONG 😭"
-  //  if (objIndex === quizQuestions.length){
-    //  confirmation.textContent = "";
- //   }
   }
 
   objIndex++;
@@ -202,7 +198,6 @@ function checkAns() {
      confirmation.textContent = "";
    }
   makeQuiz();
-  
 }
 
 function makeQuiz() {
@@ -233,6 +228,7 @@ function makeQuiz() {
     insertEl.innerHTML += "<button id='selection' type='submit' onclick='checkAns()'>Submit Answer</button>";
     quizEl.appendChild(insertEl);
   } else {
+    timeStop = timeLeft;
     getHighScore(insertEl);
   }
 }
