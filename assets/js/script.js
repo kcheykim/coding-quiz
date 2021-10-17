@@ -1,7 +1,7 @@
 var buttonEl = document.querySelector(".startBtn");
 var mainEl = document.querySelector(".page-content");
 var quizEl = document.querySelector(".info-box");
-
+var confirmation = document.querySelector('#message');
 var scoreEl = document.getElementById('your-score');
 var objIndex = 0;
 var userScore = 0;
@@ -98,6 +98,10 @@ buttonEl.addEventListener("click", outputQuiz);
 
 function outputQuiz() {
   if(buttonEl ){
+    userScore = 0;
+    objIndex = 0;
+    timeLeft = 100;
+    timeStop = 0;
     makeQuiz();
     countdown();
     scoreKeeper();
@@ -109,7 +113,6 @@ function restart() {
  
   var returnBtn = document.querySelector("#return");
   returnBtn.addEventListener("click", restart);
-  
 
   if(returnBtn) {
   var mainParaEl = document.createElement("p");
@@ -123,10 +126,6 @@ function restart() {
     quizEl.appendChild(mainParaEl);
 
     buttonEl.style.display = "inline-block";
-    userScore = 0;
-    objIndex = 0;
-    timeLeft = 100;
-    timeStop = 0;
     }
 }
 
@@ -135,6 +134,7 @@ function clearHighScore(user) {
   clearBtn.addEventListener("click", clearHighScore);
    if(clearBtn) {
       localStorage.clear();
+      highScoreList = [];
       window.alert("All scores has been cleared.");
       restart();
    }
@@ -167,10 +167,9 @@ function checkAns() {
   
   //checkEl gets the four choices of the questions
   var checkEl = document.getElementsByName('choices');
-  
-  var confirmation = document.querySelector('#message');
- // confirmation = document.createElement("p");
-
+  confirmation.style.display = "inline-block";
+  //var confirmation = document.querySelector('#form-group');
+  //confirmation.textContent = "";
   //a local checkItem to hold the item that was selected in the radio button
   var checkItem = null;
   for(var i = 0; i < checkEl.length; i++) {
@@ -184,19 +183,22 @@ function checkAns() {
     return;
   }
 
- if(checkItem === quizQuestions[objIndex].answer) {
+  if(checkItem === quizQuestions[objIndex].answer) {
     confirmation.textContent = "😀 CORRECT 😀";
+    if (objIndex === quizQuestions.length){
+      confirmation.textContent = "";
+    }
     userScore = userScore + 5;
     scoreKeeper();
   }else{
-    timeLeft = timeLeft - 15;
+    timeLeft = timeLeft - 10;
     confirmation.textContent = "😭 WRONG 😭"
+    if (objIndex === quizQuestions.length){
+      confirmation.textContent = "";
+    }
   }
 
   objIndex++;
-  if (objIndex === quizQuestions.length){
-     confirmation.textContent = "";
-   }
   makeQuiz();
 }
 
@@ -228,6 +230,7 @@ function makeQuiz() {
     insertEl.innerHTML += "<button id='selection' type='submit' onclick='checkAns()'>Submit Answer</button>";
     quizEl.appendChild(insertEl);
   } else {
+    confirmation.style.display = "none";
     timeStop = timeLeft;
     getHighScore(insertEl);
   }
@@ -263,7 +266,6 @@ function getHighScore(insertEl) {
     newParagraph.innerHTML += "<h3>High Scores</h3>";
     for(var j = 0; j < highScoreList.length; j++){
       newParagraph.innerHTML += "<table><tr><td>Initial</td> <td>Scores</td> </tr><tr><td>" + highScoreList[j].initial + "</td> <td>" + highScoreList[j].hscore + "</td></tr></table>";
-     // newParagraph.innerHTML += '<ol>' + highScoreList[j].initial + " " + highScoreList[j].hscore + '</ol>';
     }
     newParagraph.innerHTML += "<button id='return' type='submit' onclick='restart()'>Go Back</button>";
     newParagraph.innerHTML += "<button id='clear' type='submit' onclick='clearHighScore()'>Clear High Scores</button>";
