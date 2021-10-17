@@ -94,8 +94,11 @@ const quizQuestions = [
   }
 ];
 
+//listening for the start button to click then call the outputQuiz function
 buttonEl.addEventListener("click", outputQuiz);
 
+//outputQuiz function will make a call to makeQuiz function, countdown 
+// function, scoreKeeper function and it will hide the start button
 function outputQuiz() {
   if(buttonEl ){
     userScore = 0;
@@ -109,8 +112,9 @@ function outputQuiz() {
   } 
 }
 
+//restart function listens for the return button then it will display the quiz information,
+// and display the start button
 function restart() {
- 
   var returnBtn = document.querySelector("#return");
   returnBtn.addEventListener("click", restart);
 
@@ -120,7 +124,7 @@ function restart() {
     quizEl.innerHTML = "";
     mainParaEl.className = "info-box";
     mainParaEl.innerHTML = "Try to answer the following code-related questions within the time limit. "
-    mainParaEl.innerHTML += "Keep in mind that incorrect answers will penalize your time by fifteen seconds! "
+    mainParaEl.innerHTML += "Keep in mind that incorrect answers will penalize your time by ten seconds! "
     mainParaEl.innerHTML += "The quiz is over if you ran out of time or you have answered all the questions. "
     mainParaEl.innerHTML += "You will be able to record you score at the end by entering you inital and submit." 
     quizEl.appendChild(mainParaEl);
@@ -129,6 +133,8 @@ function restart() {
     }
 }
 
+//clearHighScore function will listen for the clear button, then it will clear the highscore from
+// the localStorage and reset the user array to empty and call restart function
 function clearHighScore() {
   var clearBtn = document.querySelector("#clear");
   clearBtn.addEventListener("click", clearHighScore);
@@ -140,23 +146,29 @@ function clearHighScore() {
    }
 }
 
+//countdown function will start the timer and count down by one second until the quiz is done or 
+// time ran out so that timeLeft is set to timeStop, where the time stops
 function countdown() {
+  //getting the timer element and display it in the header
   var timerEl = document.getElementById('timer');
   var timeInterval = setInterval(function() {
     timerEl.style.width = "15%";
     timerEl.style.float = "flex-end";
     timerEl.textContent = "Time: " + timeLeft;
-   if(timeStop === 0) {
-    timeLeft--;
-   } else {
-  timeLeft = timeStop;
-   }
+    //if timeStop is equal to zero, decrement the timeLeft by one second, else set timeLeft to timeStop
+    if(timeStop === 0) {
+      timeLeft--;
+    } else {
+      timeLeft = timeStop;
+    }
+    //make sure the time is by one second
     if(timeLeft < 0) {
       clearInterval(timeInterval);
     }
   }, 1000);
 }
 
+//scoreKeeper function display teh tally scores
 function scoreKeeper() {
   scoreEl.style.width = "85%";
   scoreEl.style.justifyContent = "flex-start";
@@ -164,12 +176,10 @@ function scoreKeeper() {
 }
 
 function checkAns() {
-  
   //checkEl gets the four choices of the questions
   var checkEl = document.getElementsByName('choices');
   confirmation.style.display = "inline-block";
-  //var confirmation = document.querySelector('#form-group');
-  //confirmation.textContent = "";
+
   //a local checkItem to hold the item that was selected in the radio button
   var checkItem = null;
   for(var i = 0; i < checkEl.length; i++) {
@@ -178,41 +188,44 @@ function checkAns() {
       checkItem = checkEl[i].value;
     }
   }
-
+  //forces the user to select one of the answer
   if(checkItem === null) {
     return;
   }
-
+  //if the answer is correct, display the the correct message
   if(checkItem === quizQuestions[objIndex].answer) {
     confirmation.textContent = "😀 CORRECT 😀";
     if (objIndex === quizQuestions.length){
       confirmation.textContent = "";
     }
+    //increment the score by 5
     userScore = userScore + 5;
     scoreKeeper();
   }else{
+    //otherwise, display wrong message and decrement time by 10 seconds
     timeLeft = timeLeft - 10;
     confirmation.textContent = "😭 WRONG 😭"
     if (objIndex === quizQuestions.length){
       confirmation.textContent = "";
     }
   }
-
+  //increment the index of the array and call to makQuiz again
   objIndex++;
   makeQuiz();
 }
 
+//this makeQuiz functionw will display the quiz questions and answer choices
 function makeQuiz() {
   //declare local variables for questions, 4 choices, and correct answers
   var quest, pickA, pickB, pickC, pickD, ans;
-   //= quizQuestions[aIndex].question;
-  var insertEl = document.createElement("p");
+
   //creating an insertEl at the <p> tag
+  var insertEl = document.createElement("p");
 
-  insertEl.className = "quizList";
   //giving its class name as quizList
+  insertEl.className = "quizList";
 
- // insertEl.textContent = "";
+  //check to see if the index is less than the length or the array and timeLeft is greater than zero
   if(objIndex < quizQuestions.length && timeLeft > 0) {
     quizEl.innerHTML = "";
     quest = quizQuestions[objIndex].question;
@@ -222,22 +235,28 @@ function makeQuiz() {
     pickD = quizQuestions[objIndex].d;
     ans = quizQuestions[objIndex].answer;
 
+    //diplay the questions, answer choices and submit button to submit the answer    
     insertEl.innerHTML = "<h3>" + quest + "</h3>";
     insertEl.innerHTML += "<label> <input type='radio' name='choices' value='a'> " + pickA + "</label> <br>";
     insertEl.innerHTML += "<label> <input type='radio' name='choices' value='b'> " + pickB + "</label> <br>";
     insertEl.innerHTML += "<label> <input type='radio' name='choices' value='c'> " + pickC + "</label> <br>";
     insertEl.innerHTML += "<label> <input type='radio' name='choices' value='d'> " + pickD + "</label> <br>";
+    //if the button is click, call checkAns function 
     insertEl.innerHTML += "<button id='selection' type='submit' onclick='checkAns()'>Submit Answer</button>";
     quizEl.appendChild(insertEl);
   } else {
+    //otherwise, hide the correct or wrong message, set timeStop to timeLeft and call getHighScore function
     confirmation.style.display = "none";
     timeStop = timeLeft;
     getHighScore(insertEl);
   }
 }
 
-
+//display the user's score, ask the user for the initial and submit the  user's initial and score to local storage
+// once score + initial is submit, the highscore page will display all the highscore up to date with option to
+// clear the high score or return to the beginning
 function getHighScore(insertEl) {
+  //display the user's highscore and ask for initial and submit
   quizEl.innerHTML = "";
   insertEl.innerHTML += "<h3>All Done</h3>";
   insertEl.innerHTML += "<h4>Your Final Score is: " + userScore + "</h4>";
@@ -247,27 +266,31 @@ function getHighScore(insertEl) {
   insertEl.innerHTML += "<button id='initial' type='submit''>Submit</button>";
   var newBtn = document.querySelector("#initial");
   quizEl.appendChild(insertEl);
-    
-  var confirm = document.querySelector(".info-box2");
-  confirm.textContent = "";
   
+  //listen for the user to submit the inital and score
   newBtn.addEventListener("click", () => {
     var userInitialEl = document.getElementById('yourInitial').value;
       var user = {
         initial: userInitialEl,
         hscore: userScore
       };
+    //push the object user into the highScoreList array
     highScoreList.push(user);
 
     var newParagraph = document.createElement('p');
+    //store the user object into the local storage
     localStorage.setItem("user", JSON.stringify(highScoreList));
+
+    //retrieve the user initial and score back from the local storage
     var store = JSON.parse(localStorage.getItem("user"));  
     quizEl.innerHTML = "";
+    //dispaly all the store scores
     newParagraph.innerHTML += "<h3>High Scores</h3>";
     for(var j = 0; j < highScoreList.length; j++){
       newParagraph.innerHTML += "<table><tr><td>Initial</td> <td>Scores</td> </tr><tr><td>" + highScoreList[j].initial + "</td> <td>" + highScoreList[j].hscore + "</td></tr></table>";
     }
-    newParagraph.innerHTML += "<button id='return' type='submit' onclick='restart()'>Go Back</button>";
+    //button options to start over or clear the high score and start over
+    newParagraph.innerHTML += "<button id='return' type='submit' onclick='restart()'>Start Over</button>";
     newParagraph.innerHTML += "<button id='clear' type='submit' onclick='clearHighScore()'>Clear High Scores</button>";
     quizEl.appendChild(newParagraph);
   });
