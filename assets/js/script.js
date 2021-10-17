@@ -129,7 +129,7 @@ function restart() {
     }
 }
 
-function clearHighScore(user) {
+function clearHighScore() {
   var clearBtn = document.querySelector("#clear");
   clearBtn.addEventListener("click", clearHighScore);
    if(clearBtn) {
